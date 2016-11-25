@@ -1,6 +1,6 @@
 import sys
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import Qt
+from PyQt4 import QtGui
+from ext import *
 
 
 class Main(QtGui.QMainWindow):
@@ -49,30 +49,41 @@ class Main(QtGui.QMainWindow):
         self.saveAction.setShortcut("Ctrl+S")
         self.saveAction.triggered.connect(self.save)
 
+        # Action
         self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"), "Cut", self)
         self.cutAction.setStatusTip("Delete and copy text to clipboard")
         self.cutAction.setShortcut("Ctrl+X")
         self.cutAction.triggered.connect(self.text.cut)
 
+        # Copy
         self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"), "Copy", self)
         self.copyAction.setStatusTip("Copy text to clipboard")
         self.copyAction.setShortcut("Ctrl+C")
         self.copyAction.triggered.connect(self.text.copy)
 
+        # Paste
         self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"), "Paste", self)
         self.pasteAction.setStatusTip("Paste text from clipboard")
         self.pasteAction.setShortcut("Ctrl+V")
         self.pasteAction.triggered.connect(self.text.paste)
 
+        # Undo
         self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"), "Undo", self)
         self.undoAction.setStatusTip("Undo last action")
         self.undoAction.setShortcut("Ctrl+Z")
         self.undoAction.triggered.connect(self.text.undo)
 
+        # Redo
         self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"), "Redo", self)
         self.redoAction.setStatusTip("Redo last undone thing")
         self.redoAction.setShortcut("Ctrl+Y")
         self.redoAction.triggered.connect(self.text.redo)
+
+        # Find
+        self.findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"), "Find and replace", self)
+        self.findAction.setStatusTip("Find and replace words in your document")
+        self.findAction.setShortcut("Ctrl+F")
+        self.findAction.triggered.connect(find.Find(self).show)
 
         self.toolbar = self.addToolBar("Options")
 
@@ -88,6 +99,7 @@ class Main(QtGui.QMainWindow):
         self.toolbar.addAction(self.redoAction)
 
         self.toolbar.addSeparator()
+        self.toolbar.addAction(self.findAction)
 
         # Makes the next toolbar appear underneath this one
         self.addToolBarBreak()
@@ -112,6 +124,7 @@ class Main(QtGui.QMainWindow):
         edit.addAction(self.cutAction)
         edit.addAction(self.copyAction)
         edit.addAction(self.pasteAction)
+        edit.addAction(self.findAction)
 
     def new(self):
         spawn = Main(self)
