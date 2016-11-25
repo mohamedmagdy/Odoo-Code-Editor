@@ -44,11 +44,44 @@ class Main(QtGui.QMainWindow):
         self.saveAction.setShortcut("Ctrl+S")
         self.saveAction.triggered.connect(self.save)
 
+        self.cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"), "Cut", self)
+        self.cutAction.setStatusTip("Delete and copy text to clipboard")
+        self.cutAction.setShortcut("Ctrl+X")
+        self.cutAction.triggered.connect(self.text.cut)
+
+        self.copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"), "Copy", self)
+        self.copyAction.setStatusTip("Copy text to clipboard")
+        self.copyAction.setShortcut("Ctrl+C")
+        self.copyAction.triggered.connect(self.text.copy)
+
+        self.pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"), "Paste", self)
+        self.pasteAction.setStatusTip("Paste text from clipboard")
+        self.pasteAction.setShortcut("Ctrl+V")
+        self.pasteAction.triggered.connect(self.text.paste)
+
+        self.undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"), "Undo", self)
+        self.undoAction.setStatusTip("Undo last action")
+        self.undoAction.setShortcut("Ctrl+Z")
+        self.undoAction.triggered.connect(self.text.undo)
+
+        self.redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"), "Redo", self)
+        self.redoAction.setStatusTip("Redo last undone thing")
+        self.redoAction.setShortcut("Ctrl+Y")
+        self.redoAction.triggered.connect(self.text.redo)
+
         self.toolbar = self.addToolBar("Options")
 
         self.toolbar.addAction(self.newAction)
         self.toolbar.addAction(self.openAction)
         self.toolbar.addAction(self.saveAction)
+        self.toolbar.addSeparator()
+
+        self.toolbar.addAction(self.cutAction)
+        self.toolbar.addAction(self.copyAction)
+        self.toolbar.addAction(self.pasteAction)
+        self.toolbar.addAction(self.undoAction)
+        self.toolbar.addAction(self.redoAction)
+
         self.toolbar.addSeparator()
 
         # Makes the next toolbar appear underneath this one
@@ -67,6 +100,13 @@ class Main(QtGui.QMainWindow):
         file.addAction(self.newAction)
         file.addAction(self.openAction)
         file.addAction(self.saveAction)
+
+        # Edit Menu
+        edit.addAction(self.undoAction)
+        edit.addAction(self.redoAction)
+        edit.addAction(self.cutAction)
+        edit.addAction(self.copyAction)
+        edit.addAction(self.pasteAction)
 
     def new(self):
         spawn = Main(self)
