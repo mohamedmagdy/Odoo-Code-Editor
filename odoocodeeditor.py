@@ -8,6 +8,7 @@ class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.filename = ""
+        self.setWindowIcon(QtGui.QIcon("icons/icon.png"))
         self.initUI()
 
     def initUI(self):
