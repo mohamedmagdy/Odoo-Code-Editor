@@ -21,6 +21,10 @@ class Main(QtGui.QMainWindow):
         # Initialize a statusbar for the window
         self.statusbar = self.statusBar()
 
+        # If the cursor position changes, call the function that displays
+        # the line and column number
+        self.text.cursorPositionChanged.connect(self.cursorPosition)
+
         # X and Y coordinates on the screen, width, height
         self.setGeometry(100, 100, 1030, 800)
         self.setWindowTitle("Odoo Code Editor")
@@ -130,6 +134,16 @@ class Main(QtGui.QMainWindow):
         # format in plain text
         with open(self.filename, "wt") as file:
             file.write(self.text.toPlainText())
+
+    def cursorPosition(self):
+        cursor = self.text.textCursor()
+
+        # Mortals like 1-indexed things
+        line = cursor.blockNumber() + 1
+        col = cursor.columnNumber()
+
+        self.statusbar.showMessage("Line: {} | Column: {}".format(line, col))
+
 
 def main():
     app = QtGui.QApplication(sys.argv)
