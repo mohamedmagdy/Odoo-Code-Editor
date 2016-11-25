@@ -7,6 +7,7 @@ class Main(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
+        self.filename = ""
         self.initUI()
 
     def initUI(self):
@@ -25,7 +26,30 @@ class Main(QtGui.QMainWindow):
 
     def initToolbar(self):
 
+        # New
+        self.newAction = QtGui.QAction(QtGui.QIcon("icons/new.png"), "New", self)
+        self.newAction.setStatusTip("Create a new file.")
+        self.newAction.setShortcut("Ctrl+N")
+        self.newAction.triggered.connect(self.new)
+
+        # Open
+        self.openAction = QtGui.QAction(QtGui.QIcon("icons/open.png"), "Open file", self)
+        self.openAction.setStatusTip("Open an existing file.")
+        self.openAction.setShortcut("Ctrl+O")
+        self.openAction.triggered.connect(self.open)
+
+        # Save
+        self.saveAction = QtGui.QAction(QtGui.QIcon("icons/save.png"), "Save", self)
+        self.saveAction.setShortcut("Save")
+        self.saveAction.setShortcut("Ctrl+S")
+        self.saveAction.triggered.connect(self.save)
+
         self.toolbar = self.addToolBar("Options")
+
+        self.toolbar.addAction(self.newAction)
+        self.toolbar.addAction(self.openAction)
+        self.toolbar.addAction(self.saveAction)
+        self.toolbar.addSeparator()
 
         # Makes the next toolbar appear underneath this one
         self.addToolBarBreak()
@@ -39,6 +63,32 @@ class Main(QtGui.QMainWindow):
         tools = menubar.addMenu("Tools")
         help = menubar.addMenu("Help")
 
+        # File Menu
+        file.addAction(self.newAction)
+        file.addAction(self.openAction)
+        file.addAction(self.saveAction)
+
+    def new(self):
+        spawn = Main(self)
+        spawn.show()
+
+    def open(self):
+        # Get filename and get only .py, .xml, .csv files
+        self.filename = QtGui.QFileDialog.getOpenFileName(self, "Open File", ".", "*.py *.xml *.csv")
+
+        if self.filename:
+            with open(self.filename, "rt") as file:
+                self.text.setText(file.read())
+
+    def save(self):
+        # Only open dialog if there is no filename yet
+        if not self.filename:
+            self.filename = QtGui.QFileDialog.getSaveFileName(self, "Save File")
+
+        # We just storethe contents of the test file along with the
+        # format in plain text
+        with open(self.filename, "wt") as file:
+            file.write(self.text.toPlainText())
 
 def main():
     app = QtGui.QApplication(sys.argv)
